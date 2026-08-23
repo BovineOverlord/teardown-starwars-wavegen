@@ -1,0 +1,12 @@
+name = STAR WARS AI PACK
+author = tislericsm
+description = WIP project! HOW TO USE: Once you are playing, hit the pause button and look for the Spawn option at the bottom. Click this to find a menu of available items and choose which one you want to put in the game. Empire and Rebel units are now hostile to each other (and to you). WAVE GENERATOR: press O in-game to start endless faction battles - waves grow over time and escalate from troops to walkers, starfighters and finally heroes. P clears all units, U forces the next wave.
+tags=Gameplay
+
+# If description contains [noupload] the description on Steam workshop will not be overwritten.
+# Available tags (comma-separated):
+# Map      - A custom map with no particular gameplay
+# Gameplay - Mod has a mission, objective or other gameplay
+# Asset    - A collection of assets for others to use
+# Vehicle  - Mod contains drivable, custom vehicles
+# Tool     - Mod adds a custom weapon or other tool

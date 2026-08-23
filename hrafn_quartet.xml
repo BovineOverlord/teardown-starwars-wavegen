@@ -1,0 +1,6 @@
+<prefab version="1.2.0">
+	<group name="instance=MOD/hrafn_quartet.xml" pos="-40.5 19.6 40.70001" rot="0.0 0.0 0.0">
+		<instance pos="0.6 0.2 -0.3" rot="0.0 0.0 0.0" file="MOD/hrafn/tie.xml"/>
+	</group>
+</prefab>
+

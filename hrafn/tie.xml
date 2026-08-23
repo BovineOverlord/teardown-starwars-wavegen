@@ -1,0 +1,29 @@
+<prefab version="1.2.0">
+	<group name="instance=MOD/hrafn/tie.xml" pos="-85.6 5.0 0.0" rot="0.0 0.0 0.0">
+		<script pos="0.0 0.0 0.0" file="MOD/hrafn/hrafnintro.lua">
+			<body tags="flyerfp hrafn boid flyerfp alicantowingl tailNum=4 sweep=8,40,4 hoverpivot=-60 fasthedral=-20" pos="0.0 0.8 0.0" dynamic="false">
+				<vox tags="nocul" pos="0.0 -1.2 0.8" rot="0.0 0.0 0.0" texture="8 0.3" blendtexture="8 0.1" file="MOD/hrafn/hrafn.vox" object="tbody2">
+					<location name="rockett settings" tags="rocketsettings active" pos="0.0 3.6 -1.3"/>
+					<group pos="0.0 0.2 1.3" rot="0 0 0"/>
+				</vox>
+				<vox tags="nocull" pos="0.0 2.6 -0.7" rot="0.0 0.0 0.0" texture="8 0.3" blendtexture="8 0.1" density="2" strength="4" file="MOD/hrafn/hrafn.vox" object="autocannon" color="0.75 0.76 0.77">
+					<location name="autocannon settings" tags="autocannonsettings active" pos="0.05 -0.1 -0.3"/>
+				</vox>
+				<voxbox name="core" tags="nocull nosnow critspot core" pos="0.6 3.2 -0.6" rot="0 180" texture="8 0.3" blendtexture="8 0.1" strength="10" size="11 11 1" brush="MOD/hrafn/hrafn.vox" object="hrafn_core2"/>
+				<group name="shieldgroup" pos="0.0 -0.0 -8.6" prop0="density=2">
+					<voxbox name="shield" tags="nocull shieldlight" pos="0.1 3.5 9.0" rot="0 180" size="1 1 1" brush="MOD/hrafn/hrafn.vox" object="lightvox" color="0.26 0.43 0.52"/>
+				</group>
+			</body>
+			<body tags="searchlight flyerfp" pos="-3.85 4.6 -3.35" dynamic="false">
+				<voxbox tags="nocull" pos="0.05 -0.05 0.05" rot="0.0 -180.0 0.0" size="1 1 1" brush="MOD/hrafn/hrafn.vox" object="lightvox" material="glass">
+					<light tags="searchlightspot" pos="0.05 0.05 0.1" rot="0" type="cone" color="0.0 0.0 0.0" scale="700" angle="34" reach="60" unshadowed="1.2"/>
+				</voxbox>
+			</body>
+			<location name="ai settings" tags="aisettings maxhoverdist=60 minhoverdist=40 repotime=2.8 distracttime=3" pos="0.0 2.6 1.4"/>
+			<location name="squad settings" tags="squad=echo squadsettings sightlink" pos="0.6 2.6 0.6"/>
+			<location name="attack settings" tags="attacksettings" pos="0.1 2.6 0.6" rot="0.0 0.0 0.0"/>
+			<location name="health settings" tags="healthsettings shields" pos="-0.3 2.6 0.6"/>
+		</script>
+	</group>
+</prefab>
+

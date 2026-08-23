@@ -1,0 +1,20 @@
+MOD/atst.xml : Walkers/AT-ST
+
+MOD/vader.xml : Heroes & Villains/Darth Vader
+
+MOD/luke.xml : Heroes & Villains/Luke Skywalker
+
+MOD/kenobi.xml : Heroes & Villains/Obi-Wan Kenobi
+
+MOD/emperor.xml : Heroes & Villains/Darth Sidious
+
+MOD/trooper.xml : Troopers/Stormtrooper
+
+MOD/rebel.xml : Troopers/Rebel trooper
+
+MOD/hrafn/hrafn.xml : Starfighters/Slave I
+
+MOD/hrafn/tie.xml : Starfighters/TIE Fighter
+
+MOD/hrafn/air.xml : Starfighters/T-47 Airspeeder
+
