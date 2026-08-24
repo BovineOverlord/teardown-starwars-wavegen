@@ -26,6 +26,8 @@ This version turns it into a battle sandbox:
 - **Automatic balancing.** The losing side is reinforced and the winning side scaled back so
   battles stay competitive. AT-STs count as 5 units toward strength/budget. Rebels get an air
   advantage (3 airspeeders vs 1 TIE) since aircraft are their main way to destroy walkers.
+- **Hunt-the-player mode.** Flip one hotkey and the two factions ally — every current and future
+  unit turns and comes after *you* for a survival-style horde fight. Flip it back to resume the war.
 - **Performance-aware.** Waves automatically pause when the frame rate drops below ~30 FPS and
   resume once it recovers.
 
@@ -34,6 +36,7 @@ This version turns it into a battle sandbox:
 | Key | Action |
 |-----|--------|
 | `O` | Start / stop the waves |
+| `H` | **Hunt the player** — both factions ally and every current/future unit comes after *you* |
 | `K` | Pause / resume spawning |
 | `P` | Clear all spawned units |
 | `U` | Force the next wave now (overrides the performance pause) |

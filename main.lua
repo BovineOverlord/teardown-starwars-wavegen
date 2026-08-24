@@ -58,9 +58,11 @@ function init()
 		holding = false,          -- next wave delayed for perf / saturation
 		paused = false,           -- user-paused (hotkey): stop spawning new waves
 		forceNext = false,        -- "wave now" request: spawn immediately, ignore gates
+		huntPlayer = false,       -- hunt-the-player mode: factions ally and chase you
 		bodyCount = 0,            -- cached total unit bodies (real FPS driver)
 		avgFrameDt = 1 / 60,      -- smoothed real frame time (FPS proxy)
 	}
+	SetBool("level.sw.huntplayer", false)
 end
 
 ------------------------------------------------------------------------------------
@@ -307,6 +309,13 @@ function tick(dt)
 		clearUnits()
 		SetString("hud.notification", "Wave Generator: cleared all units")
 	end
+	if InputPressed("h") then
+		wave.huntPlayer = not wave.huntPlayer
+		SetBool("level.sw.huntplayer", wave.huntPlayer)
+		SetString("hud.notification", wave.huntPlayer
+			and "HUNT THE PLAYER: factions allied - everyone is after you!"
+			or "Hunt the player: OFF - factions fight each other again")
+	end
 
 	if not wave.active then return end
 
@@ -365,6 +374,11 @@ function draw()
 			UiFont("regular.ttf", 24)
 			UiColor(1, 0.85, 0.1, 1)
 			UiText("STAR WARS WAVE GENERATOR ready - press [O] to start")
+			if wave.huntPlayer then
+				UiTranslate(0, 28)
+				UiColor(1, 0.3, 0.2, 1)
+				UiText("HUNT THE PLAYER active - press [H] to turn off")
+			end
 		UiPop()
 		return
 	end
@@ -379,24 +393,31 @@ function draw()
 
 		UiTranslate(0, 32)
 		UiFont("regular.ttf", 22)
-		local status, col
-		if wave.paused then
-			status = "PAUSED"
-			col = {1, 0.8, 0.2}
-		elseif wave.holding then
-			status = "HOLDING (thinning out / FPS " .. math.floor(1 / math.max(wave.avgFrameDt, 0.0001)) .. ")"
-			col = {1, 0.5, 0.2}
+		if wave.huntPlayer then
+			local status = "next wave: " .. math.max(0, math.ceil(WAVE_INTERVAL - wave.timer)) .. "s"
+			if wave.paused then status = "PAUSED" elseif wave.holding then status = "HOLDING" end
+			UiColor(1, 0.3, 0.2, 1)
+			UiText("HUNT THE PLAYER - all " .. (wave.eCount + wave.rCount) .. " units are after YOU        " .. status)
 		else
-			status = "next wave: " .. math.max(0, math.ceil(WAVE_INTERVAL - wave.timer)) .. "s"
-			col = {0.5, 0.7, 1}
+			local status, col
+			if wave.paused then
+				status = "PAUSED"
+				col = {1, 0.8, 0.2}
+			elseif wave.holding then
+				status = "HOLDING (thinning out / FPS " .. math.floor(1 / math.max(wave.avgFrameDt, 0.0001)) .. ")"
+				col = {1, 0.5, 0.2}
+			else
+				status = "next wave: " .. math.max(0, math.ceil(WAVE_INTERVAL - wave.timer)) .. "s"
+				col = {0.5, 0.7, 1}
+			end
+			UiColor(col[1], col[2], col[3], 1)
+			UiText("Empire " .. wave.eCount .. "   vs   Rebels " .. wave.rCount .. "        " .. status)
 		end
-		UiColor(col[1], col[2], col[3], 1)
-		UiText("Empire " .. wave.eCount .. "   vs   Rebels " .. wave.rCount .. "        " .. status)
 
 		UiTranslate(0, 26)
 		UiColor(0.7, 0.7, 0.7, 1)
 		UiFont("regular.ttf", 18)
-		UiText("[O] toggle   [K] pause   [P] clear   [U] wave now")
+		UiText("[O] toggle   [H] hunt me   [K] pause   [P] clear   [U] wave now")
 
 		if wave.flash > 0 then
 			UiTranslate(0, 34)

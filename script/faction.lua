@@ -92,6 +92,15 @@ function factionUpdateTargeting(dt)
 		return faction.targetPos
 	end
 
+	-- Hunt-the-player mode: both factions ignore each other and chase the player.
+	if GetBool("level.sw.huntplayer") then
+		faction.targetIsPlayer = true
+		config.aggressive = true
+		faction.targetPos = GetPlayerCameraTransform().pos
+		robot.playerPos = faction.targetPos
+		return faction.targetPos
+	end
+
 	-- Validate current unit target
 	if faction.target ~= 0 and (not IsHandleValid(faction.target) or HasTag(faction.target, "sw_dead")) then
 		faction.target = 0
@@ -107,7 +116,7 @@ function factionUpdateTargeting(dt)
 	-- Fight only the enemy faction; the player is a spectator and is never targeted.
 	faction.targetIsPlayer = false
 	if faction.target ~= 0 and IsHandleValid(faction.target) then
-		if faction.aggro then config.aggressive = true end
+		config.aggressive = faction.aggro
 		faction.targetPos = VecAdd(GetBodyTransform(faction.target).pos, Vec(0, 1, 0))
 	else
 		-- No enemy left to fight: stand down (roam) rather than chase the player.

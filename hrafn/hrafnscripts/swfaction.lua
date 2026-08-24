@@ -60,6 +60,13 @@ function swNearestEnemy()
 end
 
 function swComputeTargetPos()
+	-- Hunt-the-player mode: chase the player instead of the enemy faction.
+	if GetBool("level.sw.huntplayer") then
+		swTargetIsPlayer = true
+		swNoTarget = false
+		swTarget = 0
+		return GetPlayerCameraTransform().pos
+	end
 	-- Fight only the enemy faction; the player is a spectator and is never targeted.
 	local e = swNearestEnemy()
 	swTarget = e
