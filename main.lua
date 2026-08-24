@@ -17,7 +17,8 @@ FIRST_WAVE_WAIT = 3.0       -- delay before the very first wave
 SPAWN_DIST      = 40.0      -- how far each faction spawns from the battle centre
                             -- (keep < 50 so the ~100m pathfinder can route them together)
 LATERAL_STEP    = 4.0       -- spacing between ground units along a spawn line
-AIR_LATERAL_STEP = 16.0     -- wider spacing for aircraft so they don't spawn on top of each other
+AIR_LATERAL_STEP = 16.0     -- lateral spacing for aircraft spawns
+AIR_SPAWN_DELAY = 0.6       -- seconds between successive aircraft spawns (avoids overlap)
 -- These are high safety nets only; the ~30 FPS gate below is the real limiter, so
 -- waves keep coming as long as the frame rate holds up.
 MAX_ALIVE       = 400       -- weighted safety cap on living units (AT-ST counts as 5)
@@ -62,6 +63,7 @@ function init()
 		huntPlayer = false,       -- hunt-the-player mode: factions ally and chase you
 		bodyCount = 0,            -- cached total unit bodies (real FPS driver)
 		avgFrameDt = 1 / 60,      -- smoothed real frame time (FPS proxy)
+		pending = {},             -- queued (time-staggered) spawns
 	}
 	SetBool("level.sw.huntplayer", false)
 end
@@ -185,15 +187,22 @@ function spawnUnit(prefab, x, z, air)
 	return entities
 end
 
--- Spawn a line of units for one faction along the spawn edge.
+-- Queue a spawn to happen after `delay` seconds (processed in tick).
+function queueSpawn(prefab, x, z, air, delay)
+	wave.pending[#wave.pending + 1] = {prefab = prefab, x = x, z = z, air = air, at = GetTime() + (delay or 0)}
+end
+
+-- Spawn a line of units for one faction along the spawn edge. Aircraft are staggered
+-- in time so they don't materialise on top of each other; ground units spawn at once.
 function spawnLine(prefab, sign, count, air)
 	local edge = VecAdd(wave.center, VecScale(wave.axis, SPAWN_DIST * sign))
 	local step = air and AIR_LATERAL_STEP or LATERAL_STEP
+	local perDelay = air and AIR_SPAWN_DELAY or 0
 	local half = (count - 1) * 0.5
 	for i = 1, count do
 		local off = (i - 1 - half) * step
 		local p = VecAdd(edge, VecScale(wave.side, off))
-		spawnUnit(prefab, p[1], p[3], air)
+		queueSpawn(prefab, p[1], p[3], air, (i - 1) * perDelay)
 	end
 end
 
@@ -203,6 +212,7 @@ end
 function startWaveMode()
 	wave.active = true
 	wave.number = 0
+	wave.pending = {}
 	wave.timer = WAVE_INTERVAL - FIRST_WAVE_WAIT
 	-- Put the battlefield in front of the player: the two armies spawn to the left
 	-- and right and clash downrange, so the player can watch from behind the lines.
@@ -225,10 +235,12 @@ end
 
 function stopWaveMode()
 	wave.active = false
+	wave.pending = {}
 	SetBool("level.sw.aggressive", false)
 end
 
 function clearUnits()
+	wave.pending = {}
 	local bodies = FindBodies("sw_faction", true)
 	for i = 1, #bodies do
 		if IsHandleValid(bodies[i]) then Delete(bodies[i]) end
@@ -339,6 +351,21 @@ function tick(dt)
 		wave.eCount = e
 		wave.rCount = r
 		wave.bodyCount = #FindBodies("sw_faction", true)
+	end
+
+	-- Process time-staggered spawns that are now due.
+	if #wave.pending > 0 then
+		local now = GetTime()
+		local keep = {}
+		for i = 1, #wave.pending do
+			local s = wave.pending[i]
+			if now >= s.at then
+				spawnUnit(s.prefab, s.x, s.z, s.air)
+			else
+				keep[#keep + 1] = s
+			end
+		end
+		wave.pending = keep
 	end
 
 	if wave.forceNext then
