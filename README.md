@@ -3,6 +3,8 @@
 A gameplay fork of the **STAR WARS AI PACK** mod for [Teardown](https://teardowngame.com),
 adding **faction-vs-faction combat** and an endless **Wave Generator** battle mode.
 
+![Wave 5 in progress: a TIE Fighter overhead, an AT-ST being blown apart, troopers trading fire, and a downed Rebel airspeeder](preview-wavegen.jpg)
+
 > ⚠️ **This is a fan modification and a derivative work — see [Credits & Licensing](#credits--licensing).**
 > It is not affiliated with, endorsed by, or sponsored by Lucasfilm, Disney, or Tuxedo Labs.
 
